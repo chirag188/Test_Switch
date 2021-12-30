@@ -18,7 +18,7 @@ const DummyNFT = () => {
       const web3 = new Web3(window.ethereum)
       await web3.currentProvider.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x84" }]
+        params: [{ chainId: "132" }]
       });
     } catch (error) {
       alert(error.message);
