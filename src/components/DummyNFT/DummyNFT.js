@@ -1,57 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { useWeb3React } from "@web3-react/core";
-import Web3 from "web3";
+import React, { useEffect, useState } from 'react'
+import { Button } from 'react-bootstrap'
+import { useWeb3React } from '@web3-react/core'
+import Web3 from 'web3'
 
-import { useColorContract } from "../../hooks";
+import { useColorContract } from '../../hooks'
 
 const DummyNFT = () => {
-  const [mintedColors, setMintedColors] = useState([]);
-  const [color, setColor] = useState("");
+  const [mintedColors, setMintedColors] = useState([])
+  const [color, setColor] = useState('')
 
-  const { account, deactivate } = useWeb3React();
-  const colorContract = useColorContract();
+  const { account, deactivate } = useWeb3React()
+  const colorContract = useColorContract()
 
   const onMintClick = async () => {
-    console.log("GGah")
+    console.log('GGah')
     try {
       const web3 = new Web3(window.ethereum)
       await web3.currentProvider.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "132" }]
-      });
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x84' }],
+      })
+      window.location.reload(false);
     } catch (error) {
-      alert(error.message);
+      alert(error.message)
     }
     // await colorContract.methods.mint(color).send({
     //   from: account,
     // });
     // setColor("");
-  };
+  }
 
   useEffect(() => {
     const loadColors = async () => {
       if (!colorContract) {
-        return;
+        return
       }
       const totalSupply = await colorContract.methods
         .totalSupply()
-        .call({ from: account });
+        .call({ from: account })
 
       // Load Colors
       for (var i = 1; i <= totalSupply; i++) {
-        const color = await colorContract.methods.colors(i - 1).call();
-        setMintedColors((oldState) => [...oldState, color]);
+        const color = await colorContract.methods.colors(i - 1).call()
+        setMintedColors((oldState) => [...oldState, color])
       }
-    };
+    }
 
-    loadColors();
-  }, [colorContract, account]);
+    loadColors()
+  }, [colorContract, account])
 
   const onLogoutClick = () => {
-    localStorage.setItem("shouldEagerConnect", false);
-    deactivate();
-  };
+    localStorage.setItem('shouldEagerConnect', false)
+    deactivate()
+  }
 
   return (
     <div className="container-fluid mt-5">
@@ -69,11 +70,7 @@ const DummyNFT = () => {
               placeholder="e.g. #FFFFFF"
               onChange={(event) => setColor(event.target.value)}
             />
-            <Button
-              variant="outline-primary"
-              disabled={!color}
-              onClick={onMintClick}
-            >
+            <Button variant="outline-primary" onClick={onMintClick}>
               MINT
             </Button>
           </div>
@@ -91,12 +88,12 @@ const DummyNFT = () => {
                 >
                   <div>{color}</div>
                 </div>
-              );
+              )
             })
           : null}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DummyNFT;
+export default DummyNFT
